@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+</body>
+
+
+<script>
+    console.log("Arr-------------")
+    const arr = [1, 2, 3]
+    for (const a of arr) console.log(a)
+
+    let iter1 = arr[Symbol.iterator]()
+    console.log(iter1.next())
+
+    console.log("Set-------------")
+    const set = new Set([1, 2, 3])
+    for (const a of set) console.log(a)
+
+    let iter2 = set[Symbol.iterator]()
+    console.log(iter2.next())
+
+    console.log("Map-------------")
+    const map = new Map([
+        ["a", 1],
+        ["b", 2],
+        ["c", 3]
+    ])
+    for (const a of map) console.log(a)
+    for (const a of map.keys()) console.log(a)
+    for (const a of map.values()) console.log(a)
+    for (const a of map.entries()) console.log(a)
+
+    let iter3 = map[Symbol.iterator]()
+    console.log(iter3.next())
+
+// 이터러블/이터레이터 프로토콜
+// 이터러블 : 이터레이터를 리턴하는 [Symbol.iterator]()를 가진 값
+// 이터레이터 : {value, done} 객체를 리턴하는 next() 를 가진 값
+// 이터러블/이터레이터 프로토콜 : 이터러블을 for...of, 전개 연산자 등과 함께 동작하도록한 규약
+
+
+</script>
+
+</html>

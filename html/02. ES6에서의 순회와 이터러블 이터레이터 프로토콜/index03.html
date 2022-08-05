@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+</body>
+
+<!-- 사용자 정의 이터러블을 통해 알아보기 -->
+<script>
+    const iterable = {
+        [Symbol.iterator]() {
+            let i = 3;
+            return {
+                next() {
+                    return i === 0 ? { done: true } : { value: i--, done: false }
+                },
+                [Symbol.iterator]() {
+                    return this;
+                }
+            }
+        }
+    };
+
+    let iterator = iterable[Symbol.iterator]();
+    iterator.next();
+    iterator.next();
+    //log(iterator.next());
+    //log(iterator.next());
+    //log(iterator.next());
+
+    //for (const a of iterable) console.log(a);
+    for (const a of iterator) console.log(a);
+
+    //const arr2 = [1, 2, 3];
+    //let iter2 = arr2[Symbol.iterator]();
+    //iter2.next();
+    //console.log(iter2[Symbol.iterator]() == iter2)
+    // for (const a of arr2) console.log(a)
+
+    for (const a of document.querySelectorAll('*')) console.log(a);
+    const all = document.querySelectorAll('*');
+    let iter3 = all[Symbol.iterator]();
+    console.log(iter3.next())
+    console.log(iter3.next())
+    console.log(iter3.next())
+</script>
+
+</html>
