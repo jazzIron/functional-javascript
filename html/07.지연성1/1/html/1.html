@@ -1,0 +1,96 @@
+<script src='../lib/fx.js'></script>
+
+## range와 느긋한 L.range
+
+
+<script>
+    const add = (a, b) => a + b;
+    const range = l => {
+        let i = -1;
+        let res = [];
+        while (++i < l) {
+            res.push(i)
+        }
+        return res;
+    }
+
+    //console.log(range(5));
+    //console.log(range(2))
+
+    var list = range(4); // 이미 배열이 생성되어 있음 (완전히 평가)
+    console.log(list)
+    //console.log(reduce(add, list))
+
+</script>
+
+<!-- 느긋한 L.range -->
+<script>
+    const L = {}
+    L.range = function* (l) {
+        let i = -1;
+        while (++i < l) {
+            yield i
+        }
+    }
+    var list = L.range(4);
+    console.log(list) // 이터레이터, 평가가 아직 되지 않음
+    // console.log(list.next())
+    //console.log(reduce(add, list))
+
+
+    // 일반 range는 모든 부분이 평가되며 값이 생성
+    // L.range는 reduce 실행 전에는 평가되지 않음
+    // 큰 성능상의 차이는 없음
+
+</script>
+
+## range와 느긋한 L.range 테스트
+
+<script>
+    // function test(name, time, f) {
+    //     console.time(name);
+    //     while (time--) f();
+    //     console.timeEnd(name);
+    // }
+
+    //test('L.range', 10, () => reduce(add, L.range(1000000)));
+    //test('range', 10, () => reduce(add, range(1000000)));
+
+</script>
+
+## take
+
+<script>
+
+    console.clear();
+    // 많은 값을 전달받고 잘라주는 함수
+    const take = curry((l, iter) => {
+        let res = [];
+        for (const a of iter) {
+            res.push(a);
+            if (res.length == l) return res;
+        }
+        return res;
+    });
+
+    // 100000의 값을 만들고 5개를 뽑음 
+    //console.log(take(5, range(100000)));
+
+    go(
+        range(10000),
+        take(5),
+        reduce(add),
+        console.log
+    )
+
+    // 100000의 값을 만들지 않고 5개의 값만 만들기 때문에 훨씬 효율적임
+    //console.log(take(5, L.range(100000)));
+
+    go(
+        L.range(100000),
+        take(5),
+        reduce(add),
+        log
+    )
+
+</script>
