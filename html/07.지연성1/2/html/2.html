@@ -146,3 +146,101 @@
         console.log
     )
 </script>
+
+
+### map, filter 계열 함수들이 가지는 결합 법칙
+
+- 사용하는 데이터가 무엇이든지
+- 사용하는 보조 함수가 순수 함수라면 무엇이든지
+- 아래와 같이 결합한다면 다 결과가 같다.
+
+[[mapping, mapping], [filtering, filtering], [mapping, mapping]]
+= [[mapping, filtering, mapping], [mapping, filtering, mapping]]
+
+
+## 결과를 만드는 함수 reduce, take
+
+
+### reduce
+
+<script>
+
+
+    L.entries = function* (obj) {
+        for (const k in obj) yield [k, obj[k]];
+    }
+
+    // 다형성이 높음
+    const join = curry((sep = ',', iter) => reduce((a, b) => `${a}${sep}${b}`, iter));
+
+
+    const queryStr2 = obj => go(
+        obj,
+        Object.entries,
+        map(([k, v]) => `${k}=${v}`),
+        reduce((a, b) => `${a}&${b}`)
+    )
+
+    const queryStr = pipe(
+        L.entries,
+        //Object.entries,
+        L.map(([k, v]) => `${k}=${v}`),
+        //reduce((a, b) => `${a}&${b}`)
+        function (a) {
+            console.log(a);
+            return a;
+        },
+        join('&')
+    );
+
+    console.log(queryStr({ limit: 10, offset: 10, type: 'notice' }))
+
+
+    // function* a() {
+    //     yield 10;
+    //     yield 11;
+    //     yield 12;
+    //     yield 13;
+    // }
+
+    // console.log(join(' - ', a()))
+
+</script>
+
+### take, find
+- find 함수는 take를 사용하여 결론을 만들 수 있음
+
+<script>
+    const users = [
+        { age: 32 },
+        { age: 31 },
+        { age: 37 },
+        { age: 28 },
+        { age: 25 },
+        { age: 32 },
+        { age: 31 },
+        { age: 37 },
+    ];
+
+    const find = curry((f, iter) => go(
+        iter,
+        // 하나를 꺼내지만 모두 체크함
+        //filter(a => (console.log(a), f(a))),
+        // 결과를 미룸 (연산을 미룬다)
+        //L.filter(a => (console.log(a), f(a))),
+        L.filter(f),
+        //a => (console.log(a), a),
+        take(1),
+        // 구조 분해
+        ([a]) => a
+    ));
+
+    console.log(find(u => u.age < 30, users))
+
+    go(users,
+        L.map(u => u.age),
+        find(n => n < 30),
+        console.log
+    )
+
+</script>

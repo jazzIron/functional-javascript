@@ -1,0 +1,24 @@
+<script src="../lib/fx.js"></script>
+
+
+<script>
+
+
+    L.map = curry(function* (f, inter) {
+        iter = iter[Symbol.iterator]();
+        let cur;
+        while (!(cur = iter.next()).done) {
+            const a = cur.value;
+            yield f(a);
+        }
+
+    })
+
+    const map = curry((f, iter) => go(
+        iter,
+        L.map(f),
+        take(Infinity)
+    ));
+
+
+</script>
