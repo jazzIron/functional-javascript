@@ -1,0 +1,82 @@
+<script src="../lib/fx.js"></script>
+
+
+# Promise
+
+## 일급
+<script>
+    function add10(a, callback) {
+        setTimeout(() => callback(a + 10), 100)
+    }
+
+    // 콜백 지옥 발생
+    var a = add10(5, res => {
+        add10(res, res => {
+            add10(res, res => {
+                //console.log(res)
+            });
+        });
+    });
+
+    //console.log(a)
+
+    function add20(a) {
+        return new Promise(resolve => setTimeout(() => resolve(a + 20), 100));
+    }
+
+    var b = add20(5)
+        .then(add20)
+        .then(add20)
+        //.then(console.log);
+
+    //console.log(b)
+</script>
+
+## 일급 활용
+<script>
+    const delay100 = a => new Promise(resolve =>
+        setTimeout(() => resolve(a), 100));
+
+    const go2 = (a, f) => a instanceof Promise ? a.then(f) : f(a);
+    const add5 = a => a + 5;
+
+    var r = go2(10, add5);
+    //console.log(r);
+
+    const n1 = 10;
+    //go2(go2(n1, add5), console.log);
+
+    const n2 = delay100(10);
+    //go2(go2(n2, add5), console.log);
+</script>
+
+## Composition (합성)
+<script type="module">
+    // f . g
+    // f(g(x))
+
+    // 모나드 
+    // 안전한 함수 합성
+    const g = a => a + 1;
+    const f = a => a * a;
+    // 연속적인 합성
+    console.log(f(g(1)));
+    console.log(f(g())); // NaN 발생
+
+    // 모나드 형태의 Array
+    Array.of(1).map(g).map(f).forEach(r => console.log(r));
+    [].map(g).map(f).forEach(r => console.log(r));
+
+    Promise.resolve(2).then(g).then(f).then(r => console.log(r));
+    Promise.resolve().then(g).then(f).then(r => console.log(r));
+
+    new Promise(
+        resolve => setTimeout(() => resolve(2), 100)
+    ).then(g).then(f).then(r => console.log(r))
+
+</script>
+
+## Kleisli Composition
+<script type="module">
+
+</script>
