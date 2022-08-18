@@ -3,7 +3,9 @@
 
 <script>
 
+    // # L.map + take로 map 만들기
 
+    // 로그를 찍기위해 세세하게 표현 
     L.map = curry(function* (f, inter) {
         iter = iter[Symbol.iterator]();
         let cur;
@@ -11,14 +13,57 @@
             const a = cur.value;
             yield f(a);
         }
+    });
 
-    })
+    L.map = curry(function* (f, iter) {
+        for (const a of iter) yield a
+    });
+
+    const takeAll = take(Infinity);
 
     const map = curry((f, iter) => go(
         iter,
         L.map(f),
-        take(Infinity)
+        takeAll,
     ));
+
+    const map2 = curry(pipe(
+        L.map, take(Infinity)
+    ))
+
+    // ## L.filter + take로 filter 만들기
+
+    L.filter = curry(function* (f, iter) {
+        iter = iter[Symbol.iterator]();
+        let cur;
+        while (!(cur = iter.next()).done) {
+            const a = cur.value;
+            if (f(a)) yield a;
+        }
+    });
+
+    L.filter = curry(function* (f, iter) {
+        for (const a of iter) {
+            if (f(a)) yield a;
+        }
+    });
+
+    const filter = curry((f, iter) => {
+        let res = [];
+        iter = iter[Symbol.iterator]();
+        let cur;
+        while (!(cur = iter.next()).done) {
+            const a = cur.value;
+            if (f(a)) res.push(a);
+        }
+        return res;
+    })
+
+
+    const filter2 = curry(pipe(L.filter, takeAll));
+
+    console.log(filter(a => a % 2, range(4)))
+
 
 
 </script>
