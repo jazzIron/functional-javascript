@@ -77,6 +77,37 @@
 </script>
 
 ## Kleisli Composition
+
 <script type="module">
+    // f . g
+    // f(g(x)) = f(g(x))
+
+    console.clear();
+
+    var users = [
+        { id: 1, name: 'aa' },
+        { id: 2, name: 'bb' },
+        { id: 3, name: 'cc' },
+    ];
+
+    const getUserById = id => find(u => u.id == id, users) || Promise.reject('없어요!');
+
+    const f1 = ({ name }) => name;
+    const g1 = getUserById;
+
+    //const fg = id => f1(g1(id));
+
+    //users.pop();
+    //users.pop();
+
+    // const r = fg(2);
+    // console.log(r)
+
+    // const r2 = fg(2);
+    // console.log(r)
+
+    const fg = id => Promise.resolve(id).then(g1).then(f1).catch(a => a)
+    fg(2).then(console.log)
+
 
 </script>
